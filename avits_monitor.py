@@ -81,3 +81,30 @@ if __name__ == "__main__":
 
     # Start Flask server
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+
+from telegram import Bot, Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
+
+# Function to get chat ID
+def get_chat_id(update: Update, context: CallbackContext):
+    chat_id = update.message.chat_id
+    update.message.reply_text(f"Your chat ID is: {chat_id}")
+
+# Set up the bot
+def main():
+    TELEGRAM_TOKEN = '7743658548:AAH01KLaCFq7h9GLb_ABH5TsccTwRUVsA2Q'  # Replace with your bot token
+    updater = Updater(TELEGRAM_TOKEN, use_context=True)
+
+    dp = updater.dispatcher
+
+    # Add the /getchatid command handler
+    dp.add_handler(CommandHandler("getchatid", get_chat_id))
+
+    # Start the bot
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
+
