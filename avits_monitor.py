@@ -20,13 +20,13 @@ bot = telegram.Bot(token=TELEGRAM_TOKEN)
 
 nest_asyncio.apply()
 
-# === CONFIGURATION ===
-URL = "https://www.usvisaappt.com/visaapplicantui/home/appointment/slot?type=POST&appUUID=257348e0-0b79-4e6b-be0f-28ad4618e6f9&applicantId=32727BDE5DCA&ofcAppointmentDate="
-CHECK_INTERVAL = 300  # seconds (5 minutes)
-
 # Telegram Bot Configuration
 TELEGRAM_TOKEN = '7743658548:AAH01KLaCFq7h9GLb_ABH5TsccTwRUVsA2Q'
 CHAT_ID = '5395444623'
+
+# === CONFIGURATION ===
+URL = "https://www.usvisaappt.com/visaapplicantui/home/appointment/slot?type=POST&appUUID=257348e0-0b79-4e6b-be0f-28ad4618e6f9&applicantId=32727BDE5DCA&ofcAppointmentDate="
+CHECK_INTERVAL = 300  # seconds (5 minutes)
 
 # Define the command to get the chat ID
 def get_chat_id(update, context):
@@ -34,10 +34,8 @@ def get_chat_id(update, context):
     update.message.reply_text(f"Your chat ID is: {chat_id}")
 
 # Set up the bot
-def main():
-    TELEGRAM_TOKEN = '7743658548:AAH01KLaCFq7h9GLb_ABH5TsccTwRUVsA2Q'  # Replace with your bot token
+def start_telegram_bot():
     updater = Updater(TELEGRAM_TOKEN, use_context=True)
-
     dp = updater.dispatcher
 
     # Add the /getchatid command handler
@@ -47,9 +45,9 @@ def main():
     updater.start_polling()
     updater.idle()
 
-if __name__ == '__main__':
-    main()
-
+# Start Telegram bot in a separate thread
+def run_telegram_bot():
+    Thread(target=start_telegram_bot).start()
 
 async def send_telegram_alert():
     message = "🚨 Appointment slot might be available! Check AVATS now: https://www.usvisaappt.com/visaapplicantui/home/appointment/slot?type=POST&appUUID=257348e0-0b79-4e6b-be0f-28ad4618e6f9&applicantId=32727BDE5DCA&ofcAppointmentDate="
@@ -75,8 +73,11 @@ def home():
 
 # Start the Flask server and background thread
 if __name__ == "__main__":
-    # Start background thread
+    # Start background thread for checking AVATS
     Thread(target=check_avats, daemon=True).start()
+
+    # Start the Telegram bot in a separate thread
+    run_telegram_bot()
 
     # Start Flask server
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
