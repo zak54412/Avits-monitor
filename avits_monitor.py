@@ -46,6 +46,27 @@ def start_telegram_bot():
     updater.start_polling()
     updater.idle()
 
+from telegram import Update
+from telegram.ext import Application, MessageHandler, filters, ContextTypes
+
+# Function to log chat ID of any incoming message
+async def log_chat_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    # Log the chat ID to the console
+    print(f"Received a message from chat ID: {update.message.chat_id}")
+    
+    # Optionally, respond to the user
+    await update.message.reply_text("Message received, your chat ID is logged.")
+
+# Initialize the bot with the token
+application = Application.builder().token("7743658548:AAH01KLaCFq7h9GLb_ABH5TsccTwRUVsA2Q").build()
+
+# Add the message handler for all incoming text messages
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, log_chat_id))
+
+# Run the bot (start polling for messages)
+application.run_polling()
+
+
 # Start Telegram bot in a separate thread
 def run_telegram_bot():
     Thread(target=start_telegram_bot).start()
