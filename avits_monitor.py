@@ -1,3 +1,4 @@
+import logging
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -90,6 +91,22 @@ from telegram.ext import Updater, CommandHandler, CallbackContext
 def get_chat_id(update: Update, context: CallbackContext):
     chat_id = update.message.chat_id
     update.message.reply_text(f"Your chat ID is: {chat_id}")
+
+# Enable logging to capture bot's behavior and errors
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Function to log errors
+def error(update, context):
+    logger.warning(f'Update {update} caused error {context.error}')
+dp.add_error_handler(error)
+
+def get_chat_id(update: Update, context: CallbackContext):
+    chat_id = update.message.chat_id
+    print(f"Received chat ID: {chat_id}")  # Debug print
+    update.message.reply_text(f"Your chat ID is: {chat_id}")
+
 
 # Set up the bot
 def main():
