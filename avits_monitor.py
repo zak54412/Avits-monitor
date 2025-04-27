@@ -5,11 +5,31 @@ import asyncio
 from telegram import Bot
 import nest_asyncio
 import os
+from flask import Flask
+import telegram
+
+
+app = Flask(__name__)
+
+# Existing code for Telegram Bot
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+CHAT_ID = os.getenv('CHAT_ID')
+
+bot = telegram.Bot(token=TELEGRAM_TOKEN)
+
+# Add your existing code here...
+
+@app.route('/')
+def home():
+    return 'AVITS Monitor is running...'
+
+if __name__ == "__main__":
+    # Start the Flask server
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
 
 TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
 CHAT_ID = os.environ['CHAT_ID']
-
-
 
 nest_asyncio.apply()
 
