@@ -2,3 +2,5 @@ requests
 beautifulsoup4
 python-telegram-bot
 nest_asyncio
+Flask
+Flask==2.2.3
