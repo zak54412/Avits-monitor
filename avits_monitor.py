@@ -107,6 +107,22 @@ def get_chat_id(update: Update, context: CallbackContext):
     print(f"Received chat ID: {chat_id}")  # Debug print
     update.message.reply_text(f"Your chat ID is: {chat_id}")
 
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
+
+# Initialize the bot with the token and dispatcher
+application = Application.builder().token(TELEGRAM_TOKEN).build()
+
+# Define the command handler
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("Bot is working!")
+
+# Add the handler to the application
+application.add_handler(CommandHandler("start", start))
+
+# Run the bot
+application.run_polling()
+
 
 # Set up the bot
 def main():
